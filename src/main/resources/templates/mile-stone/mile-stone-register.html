@@ -2,9 +2,48 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>마일스톤 등록</title>
 </head>
 <body>
+<form id="milestoneForm">
+    <label for="milestoneName">마일스톤 이름:</label>
+    <input type="text" id="milestoneName" name="milestoneName" required>
+    <button type="submit">등록</button>
+</form>
 
+<script>
+
+    document.getElementById('milestoneForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const milestoneName = document.getElementById('milestoneName').value;
+
+        if (!milestoneName) {
+            alert('마일스톤 이름을 입력해주세요.');
+            return;
+        }
+
+        fetch('/api/milestone', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: milestoneName })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('등록에 실패했습니다.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('마일스톤 등록 성공: ' + data.message);
+                document.getElementById('milestoneName').value = '';
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+    });
+</script>
 </body>
 </html>
