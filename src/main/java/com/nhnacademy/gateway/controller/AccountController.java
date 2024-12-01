@@ -4,7 +4,6 @@ import com.nhnacademy.gateway.dto.account.AccountDto;
 import com.nhnacademy.gateway.dto.account.AuthenticationDto;
 import com.nhnacademy.gateway.dto.account.LoginDto;
 import com.nhnacademy.gateway.dto.account.RegisterDto;
-import com.nhnacademy.gateway.feign.AccountApiClient;
 import com.nhnacademy.gateway.service.AccountService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,8 +23,6 @@ import java.io.IOException;
 public class AccountController {
 
     private final AccountService accountService;
-
-    private AccountApiClient accountApiClient;
 
     private RedisTemplate<String, Object> redisTemplate;
 
