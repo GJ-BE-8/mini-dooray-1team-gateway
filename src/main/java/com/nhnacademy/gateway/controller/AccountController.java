@@ -4,6 +4,7 @@ import com.nhnacademy.gateway.dto.account.AccountDto;
 import com.nhnacademy.gateway.dto.account.LoginDto;
 import com.nhnacademy.gateway.dto.account.RegisterDto;
 import com.nhnacademy.gateway.feign.AccountApiClient;
+import com.nhnacademy.gateway.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,7 +17,7 @@ import java.util.List;
 @Controller
 public class AccountController {
 
-    private final AccountApiClient accountApiClient;
+    private final AccountService accountService;
 
     // 로그인 GET
     @GetMapping("/login")
@@ -27,7 +28,7 @@ public class AccountController {
     // 로그인 POST
     @PostMapping("/login")
     public String postLogin(@ModelAttribute LoginDto loginDto) {
-        ResponseEntity<?> responseEntity = accountApiClient.postLogin(loginDto);
+        ResponseEntity<?> responseEntity = accountService.postLogin(loginDto);
         if(responseEntity.getStatusCode().is2xxSuccessful()) {
             return "home/index";
         }
@@ -44,10 +45,16 @@ public class AccountController {
 //        }
 //    }
 
-    // 회원 가입
-    @PostMapping("/account")
-    public String registerUser(@ModelAttribute RegisterDto registerDto) {
-        ResponseEntity<AccountDto> responseEntity = accountApiClient.registerAccount(registerDto);
+    // 회원 가입 - GET
+    @GetMapping("/account/register")
+    public String getRegister() {
+        return "account/register";
+    }
+
+    // 회원 가입 - POST
+    @PostMapping("/account/register")
+    public String postRegister(@ModelAttribute RegisterDto registerDto) {
+        ResponseEntity<AccountDto> responseEntity = accountService.registerAccount(registerDto);
         if(responseEntity.getStatusCode().is2xxSuccessful()) {
             return "account/login";
         }
@@ -57,7 +64,7 @@ public class AccountController {
     // 마이 페이지 - 나의 계정 정보
     @GetMapping("/account/{id}")
     public String getAccount(@PathVariable Long id, Model model) {
-        ResponseEntity<AccountDto> responseEntity = accountApiClient.getAccountById(id);
+        ResponseEntity<AccountDto> responseEntity = accountService.getAccountById(id);
         if(responseEntity.getStatusCode().is2xxSuccessful()) {
             model.addAttribute("account", responseEntity.getBody());
             return "account/myPage";
@@ -68,7 +75,7 @@ public class AccountController {
     // 회원 정보 수정
     @PutMapping("/account/{id}")
     public String putAccount(@PathVariable Long id, @RequestBody RegisterDto registerDto) {
-        ResponseEntity<AccountDto> responseEntity = accountApiClient.updateAccount(id, registerDto);
+        ResponseEntity<AccountDto> responseEntity = accountService.updateAccount(id, registerDto);
         if(responseEntity.getStatusCode().is2xxSuccessful()) {
             return "account/myPage";
         }
@@ -78,7 +85,7 @@ public class AccountController {
     // 회원 삭제
     @DeleteMapping("/account/{id}")
     public String deleteAccount(@PathVariable Long id) {
-        accountApiClient.deleteAccount(id);
+        accountService.deleteAccount(id);
         return "redirect:/login";
     }
 
