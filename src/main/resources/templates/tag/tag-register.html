@@ -6,44 +6,13 @@
     <title>태그 등록</title>
 </head>
 <body>
-<form id="tagForm">
+
+<form th:action="@{/api/tag}" method="post">
     <label for="tagName">태그 이름:</label>
     <input type="text" id="tagName" name="tagName" required>
+
     <button type="submit">등록</button>
 </form>
 
-<script>
-    document.getElementById('tagForm').addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const tagName = document.getElementById('tagName').value;
-
-        if (!tagName) {
-            alert('태그 이름을 입력해주세요.');
-            return;
-        }
-
-        fetch('/api/tag', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name: tagName })
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('등록에 실패했습니다.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                alert('태그 등록 성공: ' + data.message);
-                document.getElementById('tagName').value = '';
-            })
-            .catch(error => {
-                alert(error.message);
-            });
-    });
-</script>
 </body>
 </html>

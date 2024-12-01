@@ -7,8 +7,7 @@
 </head>
 <body>
 
-<!-- 업무 상세 정보 -->
-<form th:action="@{/task/{id}(id=${taskId})}" method="GET">
+<form th:action="@{/task/{id}(id=${task.id})}" method="GET">
     <table>
         <tbody>
         <tr>
@@ -16,11 +15,11 @@
             <td><span th:text="${task.projectId}">1</span></td>
         </tr>
         <tr>
-            <td>업 무:</td>
+            <td>업무:</td>
             <td><span th:text="${task.title}">제목</span></td>
         </tr>
         <tr>
-            <td>태 그:</td>
+            <td>태그:</td>
             <td><span th:text="${task.tag}">태그</span></td>
         </tr>
         <tr>
@@ -31,37 +30,15 @@
     </table>
     <ul>
         <li>
-            <span th:text="${task.title}">내용</span>
+            <span th:text="${task.description}">내용</span>
         </li>
     </ul>
     <button type="submit">뒤로가기</button>
 </form>
 
-<!-- 업무 삭제 -->
-<br>
-<h3>업무 삭제</h3>
-<button type="button" onclick="deleteTask(/*[[${task.id}]]*/)">업무 삭제</button>
-
-<script>
-    function deleteTask(taskId) {
-        if (confirm("정말로 삭제하시겠습니까?")) {
-            fetch(`/task/${taskId}`, {
-                method: "DELETE"
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("업무 삭제에 실패했습니다.");
-                    }
-                    alert("업무가 삭제되었습니다.");
-                    window.location.href = "/tasks";
-                })
-                .catch(error => {
-                    console.error(error);
-                    alert("삭제 과정에서 오류가 발생했습니다.");
-                });
-        }
-    }
-</script>
+<form th:action="@{/task/{id}/delete(id=${task.id})}" method="post">
+    <button type="submit">업무 삭제</button>
+</form>
 
 </body>
 </html>
