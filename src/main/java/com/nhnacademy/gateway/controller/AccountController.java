@@ -1,6 +1,7 @@
 package com.nhnacademy.gateway.controller;
 
 import com.nhnacademy.gateway.dto.account.AccountDto;
+import com.nhnacademy.gateway.dto.account.AuthenticationDto;
 import com.nhnacademy.gateway.dto.account.LoginDto;
 import com.nhnacademy.gateway.dto.account.RegisterDto;
 import com.nhnacademy.gateway.feign.AccountApiClient;
@@ -76,12 +77,13 @@ public class AccountController {
     }
 
     // 마이 페이지 - 나의 계정 정보
-    @GetMapping("/account/{id}")
-    public String getAccount(@PathVariable Long id, Model model) {
-        ResponseEntity<AccountDto> responseEntity = accountService.getAccountById(id);
+    @GetMapping("/account/{ids}")
+    public String getAccount(@PathVariable String ids, Model model) {
+        ResponseEntity<AuthenticationDto> responseEntity = accountService.getAuthenticationByIds(ids);
+
         if(responseEntity.getStatusCode().is2xxSuccessful()) {
             model.addAttribute("account", responseEntity.getBody());
-            return "account-my-page";
+            return "/account/myPage";
         }
         return "redirect:/login";
     }

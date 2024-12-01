@@ -41,14 +41,14 @@ public class AccountService {
         return restTemplate.getForEntity(ACCOUNT_URL + "/" + id, AccountDto.class);
     }
 
-    // ids로 계정 조회
-    public ResponseEntity<AccountDto> getAccountByIds(String ids) {
-        ResponseEntity<AccountDto> forEntity = restTemplate.getForEntity(ACCOUNT_URL + "/" + ids, AccountDto.class);
-        System.out.println(forEntity.getBody());
-        return forEntity;
-    }
+//    // ids로 계정 조회
+//    public ResponseEntity<AccountDto> getAccountByIds(String ids) {
+//        ResponseEntity<AccountDto> forEntity = restTemplate.getForEntity(ACCOUNT_URL + "/" + ids, AccountDto.class);
+//        System.out.println(forEntity.getBody());
+//        return forEntity;
+//    }
 
-    // ids로 인증 id, pw 조회
+    // ids로 인증 id, pw, name, email 조회
     public ResponseEntity<AuthenticationDto> getAuthenticationByIds (String ids) {
         ResponseEntity<AuthenticationDto> forEntity = restTemplate.getForEntity(ACCOUNT_URL + "/" + ids, AuthenticationDto.class);
         System.out.println(forEntity.getBody());
