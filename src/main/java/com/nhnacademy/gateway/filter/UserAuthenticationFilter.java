@@ -9,11 +9,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Objects;
 
 @Slf4j
@@ -26,8 +28,12 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        log.info("사용자 인증 실패");
+
         String sessionId = request.getSession().getId();
         String accountId = null;
+
+        log.info("session:{}, accountId:{}", sessionId, accountId);
 
         Cookie[] cookies = request.getCookies();
         if(cookies != null) {
@@ -46,10 +52,8 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
                 if(redisAccountId.equals(accountId)) { // memberId가 redis에 존재하면.
 
-                    Authentication authentication = new PreAuthenticatedAuthenticationToken(sessionId, accountId);
+                    Authentication authentication = new PreAuthenticatedAuthenticationToken(sessionId, accountId, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-
-
 
                 }
             }

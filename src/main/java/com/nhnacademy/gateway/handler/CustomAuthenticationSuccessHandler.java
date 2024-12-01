@@ -28,6 +28,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
+        log.info("로그인 성공 핸들러");
         /* 로그인하면 SESSION 이란 이름의 쿠키를 생성하고, 레디스에 세션 생성함. */
 
         HttpSession session = request.getSession(false);

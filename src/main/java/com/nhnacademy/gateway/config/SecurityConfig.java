@@ -32,7 +32,7 @@ public class SecurityConfig {
         // login authentication
         http.formLogin(formLogin -> formLogin
                 .loginPage("/login")
-                .usernameParameter("id")
+                .usernameParameter("ids")
                 .passwordParameter("password")
                 .loginProcessingUrl("/login/process") // 로그인 인증 요청을 처리하는 URL (POST 요청) -> UsernamePasswordAuthenticationFilter가 작동하여 로그인 인증 요청 처리함.
                 .failureHandler(customAuthenticationFailureHandler)
@@ -40,7 +40,7 @@ public class SecurityConfig {
         );
 
         // User Authentication
-        http.addFilterBefore(new UserAuthenticationFilter(redisTemplate), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(new UserAuthenticationFilter(redisTemplate), UsernamePasswordAuthenticationFilter.class);
 
         // Authorization
         http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
