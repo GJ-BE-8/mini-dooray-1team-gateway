@@ -1,4 +1,3 @@
-/* Reset */
 body {
     margin: 0;
     padding: 0;
@@ -7,14 +6,12 @@ body {
     line-height: 1.6;
 }
 
-/* Body Styling */
 body {
     background-color: #f9f9f9;
     padding: 20px;
     color: #333;
 }
 
-/* Form and Table Styling */
 form {
     background: #fff;
     padding: 20px;
@@ -52,7 +49,6 @@ ul li {
     margin-bottom: 10px;
 }
 
-/* Buttons */
 button {
     background-color: #007bff;
     color: white;
@@ -80,7 +76,6 @@ button[type="submit"]:hover {
     background-color: #218838;
 }
 
-/* Form Input Fields */
 input, textarea {
     width: 100%;
     padding: 10px;
@@ -94,15 +89,13 @@ textarea {
     resize: vertical;
 }
 
-/* Headings */
 h3 {
     margin-top: 0;
     color: #444;
 }
 
-/* Toggle Forms */
 form#taskForm,
 form#milestoneForm {
-    display: none; /* Hidden by default, toggled with JavaScript */
+    display: none;
     margin-top: 20px;
 }

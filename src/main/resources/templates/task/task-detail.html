@@ -41,7 +41,6 @@
     <button type="submit">뒤로가기</button>
 </form>
 
-<!-- 마일스톤 생성 버튼 -->
 <button type="button" onclick="toggleForm('milestoneForm')">마일스톤 생성</button>
 <form id="milestoneForm" style="display: none;" method="POST" action="/api/milestone">
     <h3>마일스톤 생성</h3>
@@ -54,8 +53,7 @@
     <button type="submit">생성</button>
 </form>
 
-<!-- 업무 등록 버튼 -->
-<button type="button" onclick="toggleForm('taskForm')">업무 등록</button>
+
 <form id="taskForm" style="display: none;" method="POST" action="/task">
     <h3>업무 등록</h3>
     <label for="taskTitle">업무 제목:</label>
@@ -73,24 +71,17 @@
     <label for="taskTagId">태그 ID:</label>
     <input type="number" id="taskTagId" name="tagName" required><br>
 
-
-
-
-
     <button type="submit">등록</button>
 </form>
-
-<br>
-
+<button type="button" onclick="toggleForm('taskForm')">업무 등록</button>
 
 <script>
-    // 폼 토글 함수
+
     function toggleForm(formId) {
         const form = document.getElementById(formId);
         form.style.display = form.style.display === 'none' ? 'block' : 'none';
     }
 
-    // 업무 삭제 함수
     function deleteTask(taskId) {
         if (confirm("정말로 삭제하시겠습니까?")) {
             fetch(`/task/${taskId}`, {
