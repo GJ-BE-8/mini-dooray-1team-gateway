@@ -5,23 +5,17 @@ import com.nhnacademy.gateway.dto.account.LoginDto;
 import com.nhnacademy.gateway.dto.account.RegisterDto;
 import com.nhnacademy.gateway.feign.AccountApiClient;
 import com.nhnacademy.gateway.service.AccountService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -87,7 +81,7 @@ public class AccountController {
         ResponseEntity<AccountDto> responseEntity = accountService.getAccountById(id);
         if(responseEntity.getStatusCode().is2xxSuccessful()) {
             model.addAttribute("account", responseEntity.getBody());
-            return "account/myPage";
+            return "account-my-page";
         }
         return "redirect:/login";
     }

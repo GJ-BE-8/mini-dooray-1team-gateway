@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>프로젝트 상세</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        p, li {
+            font-size: 16px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // 타임리프에서 주입된 projectId 값 가져오기
+            const projectId = /*[[${projectId}]]*/ 1; // 기본값 1
+            const projectApiUrl = `http://localhost:8080/api/project/${projectId}`;
+            const taskApiUrl = `http://localhost:8080/task/${projectId}`;
+
+            // 프로젝트 데이터 가져오기
+            fetch(projectApiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("프로젝트 정보를 가져오는데 실패했습니다.");
+                    }
+                    return response.json();
+                })
+                .then(project => {
+                    // 프로젝트 정보 DOM에 표시
+                    document.getElementById("project-id").textContent = project.id;
+                    document.getElementById("project-name").textContent = project.name;
+                    document.getElementById("project-description").textContent = project.description || "설명이 없습니다.";
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert("프로젝트 정보를 불러오는데 문제가 발생했습니다.");
+                });
+
+            // 작업 데이터 가져오기
+            fetch(taskApiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("작업 정보를 가져오는데 실패했습니다.");
+                    }
+                    return response.json();
+                })
+                .then(tasks => {
+                    // 작업 목록 DOM에 추가
+                    const taskList = document.getElementById("task-list");
+                    tasks.forEach(task => {
+                        const li = document.createElement("li");
+                        li.textContent = `작업 제목: ${task.title}, 상태: ${task.status}`;
+                        taskList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert("작업 정보를 불러오는데 문제가 발생했습니다.");
+                });
+        });
+    </script>
+</head>
+<body>
+<h1>프로젝트 상세 페이지</h1>
+
+<div id="project-details">
+    <h2>프로젝트 정보</h2>
+    <p><strong>프로젝트 ID:</strong> <span id="project-id"></span></p>
+    <p><strong>프로젝트 이름:</strong> <span id="project-name"></span></p>
+    <p><strong>프로젝트 설명:</strong> <span id="project-description"></span></p>
+</div>
+
+<div id="task-details">
+    <h2>작업 목록</h2>
+    <ul id="task-list"></ul>
+</div>
+</body>
+</html>
