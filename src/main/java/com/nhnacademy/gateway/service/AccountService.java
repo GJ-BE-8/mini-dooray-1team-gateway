@@ -51,7 +51,7 @@ public class AccountService {
     // ids로 인증 id, pw, name, email 조회
     public ResponseEntity<AuthenticationDto> getAuthenticationByIds (String ids) {
         ResponseEntity<AuthenticationDto> forEntity = restTemplate.getForEntity(ACCOUNT_URL + "/" + ids, AuthenticationDto.class);
-        System.out.println(forEntity.getBody());
+        System.out.println("account 정보 받아옴."+forEntity.getBody());
         return forEntity;
     }
 
