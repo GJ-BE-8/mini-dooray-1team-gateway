@@ -7,11 +7,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ProjectMemberDto
+public class ProjectMember
  {
      Long id;
      String name;
      String email;
      String role;
-     ProjectDto project;
+     Project project;
  }

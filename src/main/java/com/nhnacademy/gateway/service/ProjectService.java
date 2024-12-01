@@ -1,8 +1,9 @@
 package com.nhnacademy.gateway.service;
 
-import com.nhnacademy.gateway.dto.project.CreateProjectDto;
+import com.nhnacademy.gateway.dto.project.CreateProject;
+import com.nhnacademy.gateway.dto.project.Project;
 import com.nhnacademy.gateway.dto.project.ProjectDto;
-import com.nhnacademy.gateway.dto.project.ProjectWithMemberDto;
+import com.nhnacademy.gateway.dto.project.ProjectWithMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -21,9 +22,9 @@ public class ProjectService {
     private String PROJECT_URL = "http://localhost:8082/api/project";
 
     // 프로젝트 전체 조회
-    public ResponseEntity<List<ProjectDto>> getAllProjects() {
-        ParameterizedTypeReference<List<ProjectDto>> responseType =
-                new ParameterizedTypeReference<List<ProjectDto>>() {};
+    public ResponseEntity<List<Project>> getAllProjects() {
+        ParameterizedTypeReference<List<Project>> responseType =
+                new ParameterizedTypeReference<List<Project>>() {};
 
         return restTemplate.exchange(
                 PROJECT_URL,
@@ -34,13 +35,13 @@ public class ProjectService {
     }
 
     // id로 프로젝트 조회
-    public ProjectDto getProjectById(Long id) {
-        return restTemplate.getForObject(PROJECT_URL + "/" + id, ProjectDto.class);
+    public Project getProjectById(Long id) {
+        return restTemplate.getForObject(PROJECT_URL + "/" + id, Project.class);
     }
 
     // 프로젝트 생성
-    public ResponseEntity<ProjectWithMemberDto> createProject(CreateProjectDto createProjectDto) {
-        return restTemplate.postForEntity(PROJECT_URL, createProjectDto, ProjectWithMemberDto.class);
+    public ResponseEntity<ProjectWithMember> createProject(CreateProject createProject) {
+        return restTemplate.postForEntity(PROJECT_URL, createProject, ProjectWithMember.class);
     }
 
 }

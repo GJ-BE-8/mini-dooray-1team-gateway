@@ -1,9 +1,8 @@
 package com.nhnacademy.gateway.controller;
 
-import com.nhnacademy.gateway.dto.project.CreateProjectDto;
-import com.nhnacademy.gateway.dto.project.ProjectDto;
-import com.nhnacademy.gateway.dto.project.ProjectWithMemberDto;
-import com.nhnacademy.gateway.exception.CreateFailureException;
+import com.nhnacademy.gateway.dto.project.CreateProject;
+import com.nhnacademy.gateway.dto.project.Project;
+import com.nhnacademy.gateway.dto.project.ProjectWithMember;
 import com.nhnacademy.gateway.exception.ProjectNotFoundException;
 import com.nhnacademy.gateway.service.ProjectService;
 import com.nhnacademy.gateway.service.TaskService;
@@ -31,7 +30,7 @@ public class ProejctController {
     // 프로젝트 리스트
     @GetMapping("/project")
     public String projectList(Model model) {
-        ResponseEntity<List<ProjectDto>> projectsEntity = projectService.getAllProjects();
+        ResponseEntity<List<Project>> projectsEntity = projectService.getAllProjects();
         if(!projectsEntity.getStatusCode().is2xxSuccessful()) {
             throw new ProjectNotFoundException("프로젝트 전체 조회 실패");
         }
@@ -43,7 +42,7 @@ public class ProejctController {
     @GetMapping("/project/{id}")
     public String projectDetails(@PathVariable("id") Long id,
                                  Model model) {
-        ProjectDto project =  projectService.getProjectById(id);
+        Project project =  projectService.getProjectById(id);
         if(Objects.isNull(project)) {
             return "redirect:/project";
 //            throw new ProjectNotFoundException("프로젝트 상세 조회 실패");
@@ -61,14 +60,14 @@ public class ProejctController {
     // 프로젝트 생성 - POST
     @PostMapping("/project/register")
     public String registerProject(Model model,
-                                  CreateProjectDto createProjectDto) {
-        ResponseEntity<ProjectWithMemberDto> projectEntity = projectService.createProject(createProjectDto);
+                                  CreateProject createProject) {
+        ResponseEntity<ProjectWithMember> projectEntity = projectService.createProject(createProject);
         if(!projectEntity.getStatusCode().is2xxSuccessful()) {
             return "redirect:/project/project-register";
 //            throw new CreateFailureException("프로젝트 생성 실패");
         }
-        ProjectWithMemberDto projectWithMemberDto = projectEntity.getBody();
-        Long projectId = projectWithMemberDto.getProject().getId();
+        ProjectWithMember projectWithMember = projectEntity.getBody();
+        Long projectId = projectWithMember.getProject().getId();
         return "redirect:/project/" + projectId;
     }
 

@@ -7,7 +7,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CreateProjectDto {
-    private String name;
-    private String status;
+public class Project
+{
+    Long id;
+    String name;
+    String status;
 }

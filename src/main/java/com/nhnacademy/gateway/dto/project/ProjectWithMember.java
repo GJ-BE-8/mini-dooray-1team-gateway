@@ -7,7 +7,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Setter
 @Getter
-public class ProjectWithMemberDto {
-    private ProjectDto project;
-    private ProjectMemberDto projectMember;
+public class ProjectWithMember {
+    private Project project;
+    private ProjectMember projectMember;
 }
