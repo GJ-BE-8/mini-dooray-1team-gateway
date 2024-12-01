@@ -6,6 +6,7 @@ import com.nhnacademy.gateway.dto.project.ProjectWithMemberDto;
 import com.nhnacademy.gateway.exception.CreateFailureException;
 import com.nhnacademy.gateway.exception.ProjectNotFoundException;
 import com.nhnacademy.gateway.service.ProjectService;
+import com.nhnacademy.gateway.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,8 @@ import java.util.Objects;
 public class ProejctController {
 
     private final ProjectService projectService;
+
+    private final TaskService taskService;
 
     // 프로젝트 리스트
     @GetMapping("/project")

@@ -18,7 +18,7 @@ public class ProjectService {
 
     private final RestTemplate restTemplate;
 
-    private final String PROJECT_URL = "http://localhost:8082/api/project";
+    private String PROJECT_URL = "http://localhost:8082/api/project";
 
     // 프로젝트 전체 조회
     public ResponseEntity<List<ProjectDto>> getAllProjects() {

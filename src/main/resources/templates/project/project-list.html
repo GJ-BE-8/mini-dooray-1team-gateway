@@ -1,146 +1,203 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>프로젝트 전체 조회</title>-->
+<!--    <link rel="stylesheet" href="project-list.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>프로젝트 전체 조회</h1>-->
+
+<!--<div class="button-container">-->
+<!--    <button id="createProjectButton">프로젝트 생성</button>-->
+<!--    <button id="deleteProjectButton" class="delete-button" disabled>프로젝트 삭제</button>-->
+<!--</div>-->
+
+<!--<div id="projectCreationForm">-->
+<!--    <p>프로젝트 이름을 입력하세요:</p>-->
+<!--    <input type="text" id="projectNameInput" placeholder="프로젝트 이름"><br>-->
+
+<!--    <p>프로젝트 상태를 선택하세요:</p>-->
+<!--    <label>-->
+<!--        <input type="radio" name="status" value="ACTIVATION" /> 활성화-->
+<!--    </label><br />-->
+<!--    <label>-->
+<!--        <input type="radio" name="status" value="DORMANT" /> 휴면-->
+<!--    </label><br />-->
+<!--    <label>-->
+<!--        <input type="radio" name="status" value="END" /> 종료-->
+<!--    </label><br />-->
+
+<!--    <button onclick="createProject()">프로젝트 생성</button>-->
+<!--    <button onclick="cancelProjectCreation()">취소</button>-->
+<!--</div>-->
+
+<!--<div class="loading" id="loading">프로젝트 데이터를 불러오는 중...</div>-->
+
+<!--<ul class="project-list" id="projectList"></ul>-->
+
+<!--<script>-->
+<!--    const API_URL = "http://localhost:8080/api/project";-->
+
+<!--    const projectList = document.getElementById('projectList');-->
+<!--    const loadingIndicator = document.getElementById('loading');-->
+<!--    const deleteProjectButton = document.getElementById('deleteProjectButton');-->
+<!--    const projectCreationForm = document.getElementById('projectCreationForm');-->
+
+<!--    let selectedProjectId = null;-->
+
+<!--    async function fetchProjects() {-->
+<!--        try {-->
+<!--            const response = await fetch(API_URL);-->
+<!--            if (!response.ok) {-->
+<!--                throw new Error("프로젝트 데이터를 가져오는데 실패했습니다.");-->
+<!--            }-->
+<!--            const projects = await response.json();-->
+<!--            loadingIndicator.style.display = "none";-->
+<!--            projectList.innerHTML = '';-->
+<!--            projects.forEach(project => {-->
+<!--                const listItem = document.createElement('li');-->
+<!--                listItem.className = 'project-item';-->
+<!--                listItem.textContent = project.name;-->
+<!--                listItem.dataset.id = project.id;-->
+<!--                listItem.addEventListener('click', () => {-->
+<!--                    selectedProjectId = project.id;-->
+<!--                    deleteProjectButton.disabled = false;-->
+<!--                    projectList.querySelectorAll('.project-item').forEach(item => {-->
+<!--                        item.style.backgroundColor = '';-->
+<!--                    });-->
+<!--                    listItem.style.backgroundColor = '#e6f7ff';-->
+<!--                });-->
+<!--                projectList.appendChild(listItem);-->
+<!--            });-->
+<!--        } catch (error) {-->
+<!--            console.error(error);-->
+<!--            loadingIndicator.textContent = "데이터를 불러오는 중 문제가 발생했습니다.";-->
+<!--        }-->
+<!--    }-->
+
+<!--    async function createProject() {-->
+<!--        const projectName = document.getElementById('projectNameInput').value;-->
+<!--        if (!projectName) {-->
+<!--            alert("프로젝트 이름을 입력하세요.");-->
+<!--            return;-->
+<!--        }-->
+<!--        const selectedStatus = document.querySelector('input[name="status"]:checked');-->
+<!--        if (!selectedStatus) {-->
+<!--            alert("프로젝트의 상태를 선택하세요.");-->
+<!--            return;-->
+<!--        }-->
+<!--        const projectStatus = selectedStatus.value;-->
+<!--        try {-->
+<!--            const response = await fetch(API_URL, {-->
+<!--                method: 'POST',-->
+<!--                headers: {-->
+<!--                    'Content-Type': 'application/json'-->
+<!--                },-->
+<!--                body: JSON.stringify({-->
+<!--                    name: projectName,-->
+<!--                    status: projectStatus-->
+<!--                })-->
+<!--            });-->
+<!--            if (!response.ok) {-->
+<!--                throw new Error("프로젝트 생성에 실패했습니다.");-->
+<!--            }-->
+<!--            fetchProjects();-->
+<!--            projectCreationForm.style.display = 'none';-->
+<!--        } catch (error) {-->
+<!--            alert(error.message);-->
+<!--        }-->
+<!--    }-->
+
+<!--    function cancelProjectCreation() {-->
+<!--        projectCreationForm.style.display = 'none';-->
+<!--    }-->
+
+<!--    async function deleteProject() {-->
+<!--        if (selectedProjectId) {-->
+<!--            const confirmation = confirm("정말로 이 프로젝트를 삭제하시겠습니까?");-->
+<!--            if (confirmation) {-->
+<!--                try {-->
+<!--                    const response = await fetch(`${API_URL}/${selectedProjectId}`, {-->
+<!--                        method: 'DELETE'-->
+<!--                    });-->
+<!--                    if (!response.ok) {-->
+<!--                        throw new Error("프로젝트 삭제에 실패했습니다.");-->
+<!--                    }-->
+<!--                    fetchProjects();-->
+<!--                    deleteProjectButton.disabled = true;-->
+<!--                } catch (error) {-->
+<!--                    alert(error.message);-->
+<!--                }-->
+<!--            }-->
+<!--        }-->
+<!--    }-->
+
+<!--    fetchProjects();-->
+
+<!--    document.getElementById('createProjectButton').addEventListener('click', () => {-->
+<!--        projectCreationForm.style.display = 'block';-->
+<!--    });-->
+
+<!--    deleteProjectButton.addEventListener('click', deleteProject);-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>프로젝트 전체 조회</title>
-    <link rel="stylesheet" href="project-list.css">
+    <title>Project List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-<h1>프로젝트 전체 조회</h1>
-
-<div class="button-container">
-    <button id="createProjectButton">프로젝트 생성</button>
-    <button id="deleteProjectButton" class="delete-button" disabled>프로젝트 삭제</button>
-</div>
-
-<div id="projectCreationForm">
-    <p>프로젝트 이름을 입력하세요:</p>
-    <input type="text" id="projectNameInput" placeholder="프로젝트 이름"><br>
-
-    <p>프로젝트 상태를 선택하세요:</p>
-    <label>
-        <input type="radio" name="status" value="ACTIVATION" /> 활성화
-    </label><br />
-    <label>
-        <input type="radio" name="status" value="DORMANT" /> 휴면
-    </label><br />
-    <label>
-        <input type="radio" name="status" value="END" /> 종료
-    </label><br />
-
-    <button onclick="createProject()">프로젝트 생성</button>
-    <button onclick="cancelProjectCreation()">취소</button>
-</div>
-
-<div class="loading" id="loading">프로젝트 데이터를 불러오는 중...</div>
-
-<ul class="project-list" id="projectList"></ul>
-
-<script>
-    const API_URL = "http://localhost:8080/api/project";
-
-    const projectList = document.getElementById('projectList');
-    const loadingIndicator = document.getElementById('loading');
-    const deleteProjectButton = document.getElementById('deleteProjectButton');
-    const projectCreationForm = document.getElementById('projectCreationForm');
-
-    let selectedProjectId = null;
-
-    async function fetchProjects() {
-        try {
-            const response = await fetch(API_URL);
-            if (!response.ok) {
-                throw new Error("프로젝트 데이터를 가져오는데 실패했습니다.");
-            }
-            const projects = await response.json();
-            loadingIndicator.style.display = "none";
-            projectList.innerHTML = '';
-            projects.forEach(project => {
-                const listItem = document.createElement('li');
-                listItem.className = 'project-item';
-                listItem.textContent = project.name;
-                listItem.dataset.id = project.id;
-                listItem.addEventListener('click', () => {
-                    selectedProjectId = project.id;
-                    deleteProjectButton.disabled = false;
-                    projectList.querySelectorAll('.project-item').forEach(item => {
-                        item.style.backgroundColor = '';
-                    });
-                    listItem.style.backgroundColor = '#e6f7ff';
-                });
-                projectList.appendChild(listItem);
-            });
-        } catch (error) {
-            console.error(error);
-            loadingIndicator.textContent = "데이터를 불러오는 중 문제가 발생했습니다.";
-        }
-    }
-
-    async function createProject() {
-        const projectName = document.getElementById('projectNameInput').value;
-        if (!projectName) {
-            alert("프로젝트 이름을 입력하세요.");
-            return;
-        }
-        const selectedStatus = document.querySelector('input[name="status"]:checked');
-        if (!selectedStatus) {
-            alert("프로젝트의 상태를 선택하세요.");
-            return;
-        }
-        const projectStatus = selectedStatus.value;
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name: projectName,
-                    status: projectStatus
-                })
-            });
-            if (!response.ok) {
-                throw new Error("프로젝트 생성에 실패했습니다.");
-            }
-            fetchProjects();
-            projectCreationForm.style.display = 'none';
-        } catch (error) {
-            alert(error.message);
-        }
-    }
-
-    function cancelProjectCreation() {
-        projectCreationForm.style.display = 'none';
-    }
-
-    async function deleteProject() {
-        if (selectedProjectId) {
-            const confirmation = confirm("정말로 이 프로젝트를 삭제하시겠습니까?");
-            if (confirmation) {
-                try {
-                    const response = await fetch(`${API_URL}/${selectedProjectId}`, {
-                        method: 'DELETE'
-                    });
-                    if (!response.ok) {
-                        throw new Error("프로젝트 삭제에 실패했습니다.");
-                    }
-                    fetchProjects();
-                    deleteProjectButton.disabled = true;
-                } catch (error) {
-                    alert(error.message);
-                }
-            }
-        }
-    }
-
-    fetchProjects();
-
-    document.getElementById('createProjectButton').addEventListener('click', () => {
-        projectCreationForm.style.display = 'block';
-    });
-
-    deleteProjectButton.addEventListener('click', deleteProject);
-</script>
+<h1>Project List</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Thymeleaf 반복문으로 데이터 렌더링 -->
+    <tr th:each="project : ${projects}">
+        <td th:text="${project.id}">1</td>
+        <!-- Name 열을 클릭 가능하도록 하이퍼링크 추가 -->
+        <td>
+            <a th:href="@{/project/{id}(id=${project.id})}" th:text="${project.name}">Sample Project</a>
+        </td>
+        <td th:text="${project.status}">상태</td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>
+
