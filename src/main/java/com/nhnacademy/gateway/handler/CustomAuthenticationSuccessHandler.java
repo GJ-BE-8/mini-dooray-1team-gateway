@@ -1,5 +1,6 @@
 package com.nhnacademy.gateway.handler;
 
+import com.nhnacademy.gateway.dto.user_details.CutomUserDetails;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +33,8 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         /* 로그인하면 SESSION 이란 이름의 쿠키를 생성하고, 레디스에 세션 생성함. */
 
         HttpSession session = request.getSession(false);
-        User user = (User) authentication.getPrincipal();
+
+        CutomUserDetails user = (CutomUserDetails) authentication.getPrincipal();
 
         Cookie cookie = new Cookie("SESSION", user.getUsername()); // user 의 id를 SESSION 쿠키에 value 로 넣음.
         cookie.setHttpOnly(true); // 보안 설정

@@ -28,12 +28,12 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("사용자 인증 실패");
+        log.info("사용자 인증 필터");
 
         String sessionId = request.getSession().getId();
         String accountId = null;
 
-        log.info("session:{}, accountId:{}", sessionId, accountId);
+
 
         Cookie[] cookies = request.getCookies();
         if(cookies != null) {
@@ -44,20 +44,23 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-        if(sessionId != null) {
-            Object o = redisTemplate.opsForHash().get(SESSION_HASH_NAME, sessionId);
-            String redisAccountId = (String) o;
+        log.info("session:{}, accountId:{}", sessionId, accountId);
+
+        if(sessionId != null || accountId != null) {
+            String redisAccountId = (String) redisTemplate.opsForHash().get(SESSION_HASH_NAME, sessionId);
 
             if(!( Objects.isNull(redisAccountId) || redisAccountId.isEmpty() || Objects.isNull(accountId) || accountId.isEmpty()) ) {
 
                 if(redisAccountId.equals(accountId)) { // memberId가 redis에 존재하면.
 
-                    Authentication authentication = new PreAuthenticatedAuthenticationToken(sessionId, accountId, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                    Authentication authentication = new PreAuthenticatedAuthenticationToken(accountId, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 }
             }
         }
+
         filterChain.doFilter(request,response);
+
     }
 }

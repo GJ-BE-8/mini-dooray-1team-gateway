@@ -3,6 +3,7 @@ package com.nhnacademy.gateway.dto.user_details;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,23 +12,20 @@ import java.util.List;
 
 public class CutomUserDetails implements UserDetails {
 
-    private Long id;
     private String ids;
     private String password;
-    private String name;
-    private String email;
     private String role;
 
-    public CutomUserDetails(String ids, String password, String name, String email) {
+    public CutomUserDetails(String ids, String password) {
         this.ids = ids;
         this.password = password;
-        this.name = name;
-        this.email = email;
         this.role = "USER";
     }
 
-    public Long getId() {
-        return id;
+    public CutomUserDetails(String ids, String password, PasswordEncoder passwordEncoder) {
+        this.ids = ids;
+        this.password = passwordEncoder.encode(password);
+        this.role = "USER";
     }
 
     @Override

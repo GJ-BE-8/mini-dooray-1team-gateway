@@ -1,6 +1,7 @@
 package com.nhnacademy.gateway.service;
 
 import com.nhnacademy.gateway.dto.account.AccountDto;
+import com.nhnacademy.gateway.dto.account.AuthenticationDto;
 import com.nhnacademy.gateway.dto.account.LoginDto;
 import com.nhnacademy.gateway.dto.account.RegisterDto;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,20 @@ public class AccountService {
     // 계정 1개 조회
     public ResponseEntity<AccountDto> getAccountById(Long id) {
         return restTemplate.getForEntity(ACCOUNT_URL + "/" + id, AccountDto.class);
+    }
+
+    // ids로 계정 조회
+    public ResponseEntity<AccountDto> getAccountByIds(String ids) {
+        ResponseEntity<AccountDto> forEntity = restTemplate.getForEntity(ACCOUNT_URL + "/" + ids, AccountDto.class);
+        System.out.println(forEntity.getBody());
+        return forEntity;
+    }
+
+    // ids로 인증 id, pw 조회
+    public ResponseEntity<AuthenticationDto> getAuthenticationByIds (String ids) {
+        ResponseEntity<AuthenticationDto> forEntity = restTemplate.getForEntity(ACCOUNT_URL + "/" + ids, AuthenticationDto.class);
+        System.out.println(forEntity.getBody());
+        return forEntity;
     }
 
     // 회원 정보 업데이트

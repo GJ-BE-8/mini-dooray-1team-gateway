@@ -40,13 +40,14 @@ public class SecurityConfig {
         );
 
         // User Authentication
-        http.addFilterAfter(new UserAuthenticationFilter(redisTemplate), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new UserAuthenticationFilter(redisTemplate), UsernamePasswordAuthenticationFilter.class);
 
         // Authorization
         http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
                 .requestMatchers(HttpMethod.GET, "/login", "/account/register").permitAll()
                 .requestMatchers(HttpMethod.POST, "/login", "/account/register").permitAll()
                 .anyRequest().authenticated()
+//                        .anyRequest().permitAll()
 
         );
 
