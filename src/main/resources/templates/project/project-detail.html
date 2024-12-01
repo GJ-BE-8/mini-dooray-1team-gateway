@@ -3,139 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>프로젝트 상세</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        h1, h2 {
-            color: #333;
-        }
-        p, li {
-            font-size: 16px;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin-bottom: 10px;
-        }
-        .member-container {
-            margin-top: 20px;
-        }
-        .invite-container {
-            margin-top: 20px;
-        }
-        .invite-container input {
-            margin-right: 10px;
-            padding: 5px;
-        }
-        .invite-container button {
-            padding: 5px 10px;
-        }
-    </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const projectId = /*[[${projectId}]]*/ 1; // 프로젝트 ID
-            const projectApiUrl = `http://localhost:8080/api/project/${projectId}`;
-            const taskApiUrl = `http://localhost:8080/task/${projectId}`;
-            const membersApiUrl = `http://localhost:8080/api/project-members?projectId=${projectId}`;
-            const inviteApiUrl = `http://localhost:8080/api/project-members`;
-
-            // 프로젝트 정보 가져오기
-            fetch(projectApiUrl)
-                .then(response => {
-                    if (!response.ok) throw new Error("프로젝트 정보를 가져오는데 실패했습니다.");
-                    return response.json();
-                })
-                .then(project => {
-                    document.getElementById("project-id").textContent = project.id;
-                    document.getElementById("project-name").textContent = project.name;
-                    document.getElementById("project-description").textContent = project.description || "설명이 없습니다.";
-                })
-                .catch(error => {
-                    console.error(error);
-                    alert("프로젝트 정보를 불러오는데 문제가 발생했습니다.");
-                });
-
-            // 작업 정보 가져오기
-            fetch(taskApiUrl)
-                .then(response => {
-                    if (!response.ok) throw new Error("작업 정보를 가져오는데 실패했습니다.");
-                    return response.json();
-                })
-                .then(tasks => {
-                    const taskList = document.getElementById("task-list");
-                    tasks.forEach(task => {
-                        const li = document.createElement("li");
-                        li.textContent = `작업 제목: ${task.title}, 상태: ${task.status}`;
-                        taskList.appendChild(li);
-                    });
-                })
-                .catch(error => {
-                    console.error(error);
-                    alert("작업 정보를 불러오는데 문제가 발생했습니다.");
-                });
-
-            // 멤버 목록 가져오기
-            const fetchMembers = () => {
-                fetch(membersApiUrl)
-                    .then(response => {
-                        if (!response.ok) throw new Error("프로젝트 멤버 정보를 가져오는데 실패했습니다.");
-                        return response.json();
-                    })
-                    .then(members => {
-                        const memberList = document.getElementById("member-list");
-                        memberList.innerHTML = ""; // 기존 목록 초기화
-                        members.forEach(member => {
-                            const li = document.createElement("li");
-                            li.textContent = `멤버 이름: ${member.name}, 역할: ${member.role}`;
-                            memberList.appendChild(li);
-                        });
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        alert("프로젝트 멤버 정보를 불러오는데 문제가 발생했습니다.");
-                    });
-            };
-
-            fetchMembers();
-
-            // 멤버 초대
-            document.getElementById("invite-button").addEventListener("click", () => {
-                const memberId = document.getElementById("member-id").value.trim();
-                if (!memberId) {
-                    alert("멤버 ID를 입력해주세요.");
-                    return;
-                }
-
-                fetch(inviteApiUrl, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        projectId: projectId,
-                        memberId: parseInt(memberId, 10)
-                    })
-                })
-                    .then(response => {
-                        if (!response.ok) throw new Error("멤버 초대에 실패했습니다.");
-                        return response.json();
-                    })
-                    .then(() => {
-                        alert("멤버 초대 성공!");
-                        document.getElementById("member-id").value = ""; // 입력 필드 초기화
-                        fetchMembers(); // 멤버 목록 갱신
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        alert("멤버 초대 중 문제가 발생했습니다.");
-                    });
-            });
-        });
-    </script>
+    <link rel="stylesheet" href="project-detail.css">
 </head>
 <body>
 <div id="project-details">
@@ -160,5 +28,72 @@
     <input type="text" id="member-id" placeholder="멤버 ID를 입력하세요">
     <button id="invite-button">초대</button>
 </div>
+
+<div class="button-container">
+    <h2>추가 작업</h2>
+    <button onclick="location.href='/task/create'">업무 등록</button>
+    <button onclick="location.href='/tag/create'">태그 생성</button>
+    <button onclick="location.href='/milestone/create'">마일스톤 생성</button>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const projectId = /*[[${projectId}]]*/ 1; // 프로젝트 ID
+        const projectApiUrl = `http://localhost:8080/api/project/${projectId}`;
+        const taskApiUrl = `http://localhost:8080/task/${projectId}`;
+        const membersApiUrl = `http://localhost:8080/api/project-members?projectId=${projectId}`;
+
+        fetch(projectApiUrl)
+            .then(response => {
+                if (!response.ok) throw new Error("프로젝트 정보를 가져오는데 실패했습니다.");
+                return response.json();
+            })
+            .then(project => {
+                document.getElementById("project-id").textContent = project.id;
+                document.getElementById("project-name").textContent = project.name;
+                document.getElementById("project-description").textContent = project.description || "설명이 없습니다.";
+            })
+            .catch(error => {
+                console.error(error);
+                alert("프로젝트 정보를 불러오는데 문제가 발생했습니다.");
+            });
+
+        fetch(taskApiUrl)
+            .then(response => {
+                if (!response.ok) throw new Error("작업 정보를 가져오는데 실패했습니다.");
+                return response.json();
+            })
+            .then(tasks => {
+                const taskList = document.getElementById("task-list");
+                tasks.forEach(task => {
+                    const li = document.createElement("li");
+                    li.textContent = `작업 제목: ${task.title}, 상태: ${task.status}`;
+                    taskList.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error(error);
+                alert("작업 정보를 불러오는데 문제가 발생했습니다.");
+            });
+
+        fetch(membersApiUrl)
+            .then(response => {
+                if (!response.ok) throw new Error("프로젝트 멤버 정보를 가져오는데 실패했습니다.");
+                return response.json();
+            })
+            .then(members => {
+                const memberList = document.getElementById("member-list");
+                memberList.innerHTML = "";
+                members.forEach(member => {
+                    const li = document.createElement("li");
+                    li.textContent = `멤버 이름: ${member.name}, 역할: ${member.role}`;
+                    memberList.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error(error);
+                alert("프로젝트 멤버 정보를 불러오는데 문제가 발생했습니다.");
+            });
+    });
+</script>
 </body>
 </html>

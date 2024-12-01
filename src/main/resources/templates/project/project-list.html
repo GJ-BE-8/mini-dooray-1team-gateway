@@ -1,148 +1,19 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <title>프로젝트 전체 조회</title>-->
-<!--    <style>-->
-<!--        body {-->
-<!--            font-family: Arial, sans-serif;-->
-<!--            margin: 20px;-->
-<!--            padding: 0;-->
-<!--        }-->
-<!--        .project-list {-->
-<!--            list-style: none;-->
-<!--            padding: 0;-->
-<!--        }-->
-<!--        .project-item {-->
-<!--            margin: 10px 0;-->
-<!--            padding: 10px;-->
-<!--            border: 1px solid #ddd;-->
-<!--            border-radius: 5px;-->
-<!--            cursor: pointer;-->
-<!--            background-color: #f9f9f9;-->
-<!--            transition: background-color 0.3s;-->
-<!--        }-->
-<!--        .project-item:hover {-->
-<!--            background-color: #e6f7ff;-->
-<!--        }-->
-<!--    </style>-->
-<!--</head>-->
-<!--<body>-->
-<!--<h1>프로젝트 전체 조회</h1>-->
-<!--<ul class="project-list" id="projectList">-->
-<!--    &lt;!&ndash; 프로젝트 항목이 여기에 동적으로 추가됩니다 &ndash;&gt;-->
-<!--</ul>-->
-
-<!--<script>-->
-<!--    // 예제 프로젝트 데이터-->
-<!--    const projects = [-->
-<!--        { id: 1, name: "프로젝트 A", description: "프로젝트 A 설명" },-->
-<!--        { id: 2, name: "프로젝트 B", description: "프로젝트 B 설명" },-->
-<!--        { id: 3, name: "프로젝트 C", description: "프로젝트 C 설명" }-->
-<!--    ];-->
-
-<!--    // 프로젝트 목록 요소-->
-<!--    const projectList = document.getElementById('projectList');-->
-
-<!--    // 프로젝트 항목 추가-->
-<!--    projects.forEach(project => {-->
-<!--        const listItem = document.createElement('li');-->
-<!--        listItem.className = 'project-item';-->
-<!--        listItem.textContent = project.name;-->
-
-<!--        // 클릭 이벤트 추가 (상세 페이지 이동)-->
-<!--        listItem.addEventListener('click', () => {-->
-<!--            window.location.href = `/project/${project.id}`;-->
-<!--        });-->
-
-<!--        projectList.appendChild(listItem);-->
-<!--    });-->
-<!--</script>-->
-<!--</body>-->
-<!--</html>-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>프로젝트 전체 조회</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-        }
-        .project-list {
-            list-style: none;
-            padding: 0;
-        }
-        .project-item {
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #f9f9f9;
-            transition: background-color 0.3s;
-        }
-        .project-item:hover {
-            background-color: #e6f7ff;
-        }
-        .loading {
-            font-size: 16px;
-            color: #888;
-        }
-        .button-container {
-            margin: 20px 0;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 5px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .delete-button {
-            background-color: #f44336;
-        }
-        .delete-button:hover {
-            background-color: #da190b;
-        }
-        #projectCreationForm {
-            margin-top: 20px;
-            display: none;
-        }
-        #projectCreationForm input {
-            margin: 10px 0;
-            padding: 10px;
-            font-size: 16px;
-            width: 200px;
-        }
-        #projectCreationForm button {
-            background-color: #4CAF50;
-        }
-        #projectCreationForm button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <link rel="stylesheet" href="project-list.css">
 </head>
 <body>
 <h1>프로젝트 전체 조회</h1>
 
-<!-- 프로젝트 생성 및 삭제 버튼 -->
 <div class="button-container">
     <button id="createProjectButton">프로젝트 생성</button>
     <button id="deleteProjectButton" class="delete-button" disabled>프로젝트 삭제</button>
 </div>
 
-<!-- 프로젝트 생성 폼 (처음에는 숨김) -->
 <div id="projectCreationForm">
     <p>프로젝트 이름을 입력하세요:</p>
     <input type="text" id="projectNameInput" placeholder="프로젝트 이름"><br>
@@ -162,62 +33,42 @@
     <button onclick="cancelProjectCreation()">취소</button>
 </div>
 
-<!-- 로딩 메시지 -->
 <div class="loading" id="loading">프로젝트 데이터를 불러오는 중...</div>
 
-<!-- 프로젝트 목록 -->
-<ul class="project-list" id="projectList">
-    <!-- 프로젝트 항목이 여기에 동적으로 추가됩니다 -->
-</ul>
+<ul class="project-list" id="projectList"></ul>
 
 <script>
-    // API 주소
     const API_URL = "http://localhost:8080/api/project";
 
-    // 프로젝트 목록 요소
     const projectList = document.getElementById('projectList');
     const loadingIndicator = document.getElementById('loading');
     const deleteProjectButton = document.getElementById('deleteProjectButton');
     const projectCreationForm = document.getElementById('projectCreationForm');
 
-    // 선택된 프로젝트 ID
     let selectedProjectId = null;
 
-    // 프로젝트 데이터를 가져와서 화면에 표시
     async function fetchProjects() {
         try {
-            // API 호출
             const response = await fetch(API_URL);
-
-            // 응답 확인
             if (!response.ok) {
                 throw new Error("프로젝트 데이터를 가져오는데 실패했습니다.");
             }
-
-            // JSON 데이터 파싱
             const projects = await response.json();
-
-            // 로딩 메시지 제거
             loadingIndicator.style.display = "none";
-
-            // 프로젝트 목록 표시
-            projectList.innerHTML = ''; // 기존 항목 삭제
+            projectList.innerHTML = '';
             projects.forEach(project => {
                 const listItem = document.createElement('li');
                 listItem.className = 'project-item';
                 listItem.textContent = project.name;
-                listItem.dataset.id = project.id;  // 프로젝트 ID를 data-id로 저장
-
-                // 클릭 이벤트 추가 (상세 페이지 이동 및 선택)
+                listItem.dataset.id = project.id;
                 listItem.addEventListener('click', () => {
                     selectedProjectId = project.id;
-                    deleteProjectButton.disabled = false;  // 삭제 버튼 활성화
+                    deleteProjectButton.disabled = false;
                     projectList.querySelectorAll('.project-item').forEach(item => {
-                        item.style.backgroundColor = ''; // 기존 선택 해제
+                        item.style.backgroundColor = '';
                     });
-                    listItem.style.backgroundColor = '#e6f7ff';  // 선택된 항목 색상 변경
+                    listItem.style.backgroundColor = '#e6f7ff';
                 });
-
                 projectList.appendChild(listItem);
             });
         } catch (error) {
@@ -226,25 +77,18 @@
         }
     }
 
-    // 프로젝트 생성
     async function createProject() {
         const projectName = document.getElementById('projectNameInput').value;
-
         if (!projectName) {
             alert("프로젝트 이름을 입력하세요.");
             return;
         }
-
-        // 상태 선택: 라디오 버튼에서 선택된 값 가져오기
         const selectedStatus = document.querySelector('input[name="status"]:checked');
-
         if (!selectedStatus) {
             alert("프로젝트의 상태를 선택하세요.");
             return;
         }
-
-        const projectStatus = selectedStatus.value;  // 선택된 상태 값을 가져옴
-
+        const projectStatus = selectedStatus.value;
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',
@@ -253,30 +97,23 @@
                 },
                 body: JSON.stringify({
                     name: projectName,
-                    status: projectStatus  // 상태 값 추가
+                    status: projectStatus
                 })
             });
-
             if (!response.ok) {
                 throw new Error("프로젝트 생성에 실패했습니다.");
             }
-
-            // 새 프로젝트 추가 후 다시 목록을 불러옴
             fetchProjects();
-
-            // 프로젝트 생성 폼 숨기기
             projectCreationForm.style.display = 'none';
         } catch (error) {
             alert(error.message);
         }
     }
 
-    // 프로젝트 생성 취소
     function cancelProjectCreation() {
         projectCreationForm.style.display = 'none';
     }
 
-    // 프로젝트 삭제
     async function deleteProject() {
         if (selectedProjectId) {
             const confirmation = confirm("정말로 이 프로젝트를 삭제하시겠습니까?");
@@ -285,14 +122,11 @@
                     const response = await fetch(`${API_URL}/${selectedProjectId}`, {
                         method: 'DELETE'
                     });
-
                     if (!response.ok) {
                         throw new Error("프로젝트 삭제에 실패했습니다.");
                     }
-
-                    // 삭제 후 목록 갱신
                     fetchProjects();
-                    deleteProjectButton.disabled = true;  // 삭제 버튼 비활성화
+                    deleteProjectButton.disabled = true;
                 } catch (error) {
                     alert(error.message);
                 }
@@ -300,15 +134,12 @@
         }
     }
 
-    // 페이지 로드 시 프로젝트 데이터 불러오기
     fetchProjects();
 
-    // 프로젝트 생성 버튼 클릭 시
     document.getElementById('createProjectButton').addEventListener('click', () => {
-        projectCreationForm.style.display = 'block';  // 생성 폼 표시
+        projectCreationForm.style.display = 'block';
     });
 
-    // 프로젝트 삭제 버튼 클릭 시
     deleteProjectButton.addEventListener('click', deleteProject);
 </script>
 </body>

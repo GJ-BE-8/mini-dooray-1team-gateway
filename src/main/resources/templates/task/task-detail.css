@@ -4,9 +4,6 @@ body {
     box-sizing: border-box;
     font-family: Arial, sans-serif;
     line-height: 1.6;
-}
-
-body {
     background-color: #f9f9f9;
     padding: 20px;
     color: #333;
@@ -92,10 +89,4 @@ textarea {
 h3 {
     margin-top: 0;
     color: #444;
-}
-
-form#taskForm,
-form#milestoneForm {
-    display: none;
-    margin-top: 20px;
 }
