@@ -9,9 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Project
-{
-    Long id;
-    String name;
-    String status;
+public class ProjectDto {
+
+    private String name;
+    private String status;
 }

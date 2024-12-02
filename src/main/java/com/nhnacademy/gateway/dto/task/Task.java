@@ -1,7 +1,6 @@
 package com.nhnacademy.gateway.dto.task;
 
 import com.nhnacademy.gateway.dto.project.Project;
-import com.nhnacademy.gateway.dto.project.ProjectDto;
 import com.nhnacademy.gateway.dto.project.ProjectMember;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

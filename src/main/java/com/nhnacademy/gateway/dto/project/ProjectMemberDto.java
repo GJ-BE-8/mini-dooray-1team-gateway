@@ -5,13 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
-public class Project
-{
-    Long id;
-    String name;
-    String status;
+public class ProjectMemberDto {
+
+    private String name;
+    private String email;
+    private String role;
 }

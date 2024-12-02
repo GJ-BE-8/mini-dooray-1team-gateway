@@ -2,9 +2,9 @@ package com.nhnacademy.gateway.service;
 
 import com.nhnacademy.gateway.dto.project.CreateProject;
 import com.nhnacademy.gateway.dto.project.Project;
-import com.nhnacademy.gateway.dto.project.ProjectDto;
 import com.nhnacademy.gateway.dto.project.ProjectWithMember;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ProjectService {
@@ -41,7 +42,9 @@ public class ProjectService {
 
     // 프로젝트 생성
     public ResponseEntity<ProjectWithMember> createProject(CreateProject createProject) {
-        return restTemplate.postForEntity(PROJECT_URL, createProject, ProjectWithMember.class);
+        ResponseEntity<ProjectWithMember> responseEntity = restTemplate.postForEntity(PROJECT_URL, createProject, ProjectWithMember.class);
+        System.out.println(responseEntity.getBody().getProject().toString());
+        return responseEntity;
     }
 
 }

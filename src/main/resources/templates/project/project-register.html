@@ -9,7 +9,7 @@
 <div id="project-register-container">
     <h1>프로젝트 등록</h1>
 
-    <form action="/project/register" method="post">
+    <form method="post" action="/project/register">
         <div>
             <label for="name">프로젝트 이름:</label>
             <input type="text" id="name" name="name" placeholder="프로젝트 이름" required>
@@ -19,9 +19,9 @@
             <label for="status">프로젝트 상태:</label>
             <select id="status" name="status" required>
                 <option value="" disabled selected>상태를 선택하세요</option>
-                <option value="진행중">진행중</option>
-                <option value="완료">완료</option>
-                <option value="대기">대기</option>
+                <option value="do">진행중</option>
+                <option value="done">완료</option>
+                <option value="wait">대기</option>
             </select>
         </div>
 

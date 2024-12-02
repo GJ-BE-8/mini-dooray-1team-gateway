@@ -18,6 +18,5 @@ public class TaskService {
     private String TESK_URL = "http://localhost:8082/tasks";
 
    // 프로젝트의 Task 전체 가져오기
-    public List<Task>
 
 }

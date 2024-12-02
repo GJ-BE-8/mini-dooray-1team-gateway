@@ -1,17 +1,22 @@
 package com.nhnacademy.gateway.controller;
 
-import com.nhnacademy.gateway.dto.project.CreateProject;
-import com.nhnacademy.gateway.dto.project.Project;
-import com.nhnacademy.gateway.dto.project.ProjectWithMember;
+import com.nhnacademy.gateway.dto.account.AuthenticationDto;
+import com.nhnacademy.gateway.dto.project.*;
 import com.nhnacademy.gateway.exception.ProjectNotFoundException;
+import com.nhnacademy.gateway.service.AccountService;
 import com.nhnacademy.gateway.service.ProjectService;
 import com.nhnacademy.gateway.service.TaskService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -23,9 +28,11 @@ import java.util.Objects;
 @Controller
 public class ProejctController {
 
-    private final ProjectService projectService;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private String SESSION_HASH_NAME = "Session:";
 
-    private final TaskService taskService;
+    private final ProjectService projectService;
+    private final AccountService accountService;
 
     // 프로젝트 리스트
     @GetMapping("/project")
@@ -59,8 +66,36 @@ public class ProejctController {
 
     // 프로젝트 생성 - POST
     @PostMapping("/project/register")
-    public String registerProject(Model model,
-                                  CreateProject createProject) {
+    public String registerProject(@ModelAttribute ProjectDto projectDto,
+                                  HttpServletRequest request) {
+        log.info("프로젝트 생성 post in");
+
+        // 누가 이렇게 구상함? 개빡치네
+        /* SESSION Cookie에서 sessionId 가져와서 redis 에서 userId 가져와서 accountapi에게 요청 보내서 user정보 가져옴 */
+        Cookie[] cookies = request.getCookies();
+        String accountId = null;
+        for(Cookie c : cookies) {
+            if(c.getName().equals("SESSION")) {
+                accountId=c.getValue();
+            }
+        }
+        if(Objects.isNull(accountId)) {
+            return "redirect:/login";
+        }
+        AuthenticationDto authenticationDto = accountService.getAuthenticationByIds(accountId).getBody();
+        ProjectMemberDto projectMemberDto = new ProjectMemberDto(
+                authenticationDto.name(),
+                authenticationDto.email(),
+                "ADMIN"
+        );
+        CreateProject createProject = new CreateProject(
+                projectDto,
+                projectMemberDto
+        );
+        //
+
+        log.info("project정보{}, 멤버정보:{}", projectDto.toString(), projectMemberDto.toString());
+
         ResponseEntity<ProjectWithMember> projectEntity = projectService.createProject(createProject);
         if(!projectEntity.getStatusCode().is2xxSuccessful()) {
             return "redirect:/project/project-register";
